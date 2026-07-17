@@ -143,7 +143,7 @@ final def quickstepMinSdk = "29"
 final def quickstepMaxSdk = "36"
 
 android {
-    namespace "com.android.launcher3"
+    namespace "com.patalix.patalix"
     defaultConfig {
         versionCode 16_00_01_05_01
         versionName "${versionDisplayName}"
@@ -217,7 +217,7 @@ android {
 
         debug {
             applicationIdSuffix ".debug"
-            resValue("string", "derived_app_name", "patalix (Debug)")
+            resValue("string", "derived_app_name", "Lawnchair (Debug)")
 
             manifestPlaceholders.quickstepMinSdk = "0"
             manifestPlaceholders.quickstepMaxSdk = "100000"
@@ -226,7 +226,7 @@ android {
         }
 
         release {
-            resValue("string", "derived_app_name", "patalix")
+            resValue("string", "derived_app_name", "Lawnchair")
             minifyEnabled true
             shrinkResources true
             pseudoLocalesEnabled false
@@ -255,14 +255,24 @@ android {
             minSdk = 26
         }
 
-        patalix {
-            applicationId 'com.patalix.patalix'
+        github {
+            applicationId 'com.patalix.patalix.github'
             dimension "channel"
-            matchingFallbacks = ['github']
+        }
+
+        nightly {
+            applicationId 'com.patalix.patalix.nightly'
+            dimension "channel"
+        }
+
+        play {
+            applicationId "com.patalix.patalix.play"
+            dimension "channel"
+            isDefault true
         }
 
         configureEach {
-            resValue("string", "launcher_component", "${applicationId}/com.patalix.patalix")
+            resValue("string", "launcher_component", "${applicationId}/app.lawnchair.LawnchairLauncher")
         }
     }
 
@@ -271,40 +281,48 @@ android {
             res.srcDirs = ['res']
             java.srcDirs = ['src', 'src_plugins', 'compose/facade/core', 'compose/facade/enabled', 'compose/features']
             kotlin.directories.addAll('src', 'src_plugins', 'compose/facade/core', 'compose/facade/enabled', 'compose/features')
+
             manifest.srcFile 'AndroidManifest-common.xml'
             proto {
                 srcDirs = ['protos/', 'quickstep/protos_overrides/']
             }
         }
+
         lawn {
-            java.srcDirs = ['src_flags', 'src_shortcuts_overrides', 'patalix/src', 'tests/shared']
-            kotlin.directories.addAll('src_flags', 'src_shortcuts_overrides', 'patalix/src', 'tests/shared')
-            aidl.srcDirs = ['patalix/aidl']
-            res.srcDirs = ['patalix/res', 'platform_frameworks_libs_systemui/animationlib/res']
-            manifest.srcFile "patalix/AndroidManifest.xml"
+            java.srcDirs = ['src_flags', 'src_shortcuts_overrides', 'lawnchair/src', 'tests/shared']
+            kotlin.directories.addAll('src_flags', 'src_shortcuts_overrides', 'lawnchair/src', 'tests/shared')
+            aidl.srcDirs = ['lawnchair/aidl']
+            res.srcDirs = ['lawnchair/res', 'platform_frameworks_libs_systemui/animationlib/res']
+            manifest.srcFile "lawnchair/AndroidManifest.xml"
             assets {
-                srcDirs 'patalix/assets'
+                srcDirs 'lawnchair/assets'
             }
             proto {
-                srcDirs = ['patalix/protos/']
+                srcDirs = ['lawnchair/protos/']
             }
         }
+
         github {
             manifest.srcFile "github/AndroidManifest.xml"
         }
+
         nightly {
             manifest.srcFile "nightly/AndroidManifest.xml"
             res.srcDirs = ["nightly/res"]
         }
+
         lawnWithQuickstepGithub {
             manifest.srcFile "quickstep/AndroidManifest-launcher.xml"
         }
+
         lawnWithQuickstepNightly {
             manifest.srcFile "quickstep/AndroidManifest-launcher.xml"
         }
+
         lawnWithQuickstepPlay {
             manifest.srcFile "quickstep/AndroidManifest-launcher.xml"
         }
+
         withQuickstep {
             res.srcDirs = ['quickstep/res', 'quickstep/recents_ui_overrides/res']
             java.srcDirs = ['quickstep/src', 'quickstep/dagger', 'quickstep/recents_ui_overrides/src', 'quickstep/src_protolog']
@@ -318,7 +336,7 @@ androidComponents {
     onVariants(selector().all()) { variant ->
         def channel = variant.productFlavors.last().second
         variant.outputs.forEach { output ->
-            output.outputFileName.set("patalix.${output.versionName.get()}.$channel.${variant.buildType}.apk")
+            output.outputFileName.set("Lawnchair.${output.versionName.get()}.$channel.${variant.buildType}.apk")
         }
     }
 }
@@ -467,7 +485,7 @@ spotless {
         removeUnusedImports()
     }
     kotlin {
-        target("patalix/src/**/*.kt")
+        target("lawnchair/src/**/*.kt")
         ktlint(libs.ktlint.get().version).customRuleSets([
             libs.composeRules.get().toString()
         ]).editorConfigOverride([
