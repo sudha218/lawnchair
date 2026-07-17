@@ -48,7 +48,6 @@ allprojects {
 
     plugins.withId('com.google.protobuf') {
         protobuf {
-            // Configure the protoc executable
             protoc {
                 artifact = libs.protobuf.protoc.get().toString()
             }
@@ -91,11 +90,9 @@ allprojects {
             }
             gradle.projectsEvaluated {
                 tasks.withType(JavaCompile).configureEach {
-                    // Make sure the frameworkJar is always first in the classpath.
                     classpath = files(frameworkJar, classpath)
                 }
                 tasks.withType(KotlinCompile).configureEach {
-                    // Make sure the frameworkJar is always first in the classpath.
                     libraries.setFrom files(frameworkJar, libraries)
                 }
             }
@@ -148,10 +145,6 @@ final def quickstepMaxSdk = "36"
 android {
     namespace "com.android.launcher3"
     defaultConfig {
-        /*
-         * patalix Launcher 6.0 Development 1
-         * see CONTRIBUTING.md#versioning-scheme
-         */
         versionCode 16_00_01_05_01
         versionName "${versionDisplayName}"
         buildConfigField "String", "VERSION_DISPLAY_NAME", "\"${versionDisplayName}\""
@@ -194,7 +187,6 @@ android {
         "META-INF/LGPL2.1",
     ]
 
-    // Load all proguard configs from AOSP
     def proguardFilesFromAosp = allprojects.collect { proj ->
         [
             'proguard.flags',
@@ -251,7 +243,6 @@ android {
         includeInBundle = false
     }
 
-    // See: https://developer.android.com/studio/build/build-variants#flavor-dimensions
     flavorDimensions += ["app", "recents", "channel"]
 
     productFlavors {
@@ -264,9 +255,10 @@ android {
             minSdk = 26
         }
 
-       patalix {
+        patalix {
             applicationId 'com.patalix.patalix'
             dimension "channel"
+            matchingFallbacks = ['github']
         }
 
         configureEach {
@@ -277,17 +269,13 @@ android {
     sourceSets {
         main {
             res.srcDirs = ['res']
-
-            // patalix-TODO: Don't include Compose Disabled, but there's has to be another way of making this NOT long
             java.srcDirs = ['src', 'src_plugins', 'compose/facade/core', 'compose/facade/enabled', 'compose/features']
             kotlin.directories.addAll('src', 'src_plugins', 'compose/facade/core', 'compose/facade/enabled', 'compose/features')
-
             manifest.srcFile 'AndroidManifest-common.xml'
             proto {
                 srcDirs = ['protos/', 'quickstep/protos_overrides/']
             }
         }
-
         lawn {
             java.srcDirs = ['src_flags', 'src_shortcuts_overrides', 'patalix/src', 'tests/shared']
             kotlin.directories.addAll('src_flags', 'src_shortcuts_overrides', 'patalix/src', 'tests/shared')
@@ -301,28 +289,22 @@ android {
                 srcDirs = ['patalix/protos/']
             }
         }
-
         github {
             manifest.srcFile "github/AndroidManifest.xml"
         }
-
         nightly {
             manifest.srcFile "nightly/AndroidManifest.xml"
             res.srcDirs = ["nightly/res"]
         }
-
         lawnWithQuickstepGithub {
             manifest.srcFile "quickstep/AndroidManifest-launcher.xml"
         }
-
         lawnWithQuickstepNightly {
             manifest.srcFile "quickstep/AndroidManifest-launcher.xml"
         }
-
         lawnWithQuickstepPlay {
             manifest.srcFile "quickstep/AndroidManifest-launcher.xml"
         }
-
         withQuickstep {
             res.srcDirs = ['quickstep/res', 'quickstep/recents_ui_overrides/res']
             java.srcDirs = ['quickstep/src', 'quickstep/dagger', 'quickstep/recents_ui_overrides/src', 'quickstep/src_protolog']
@@ -366,7 +348,6 @@ dependencies {
     implementation projects.displaylib
     implementation projects.mechanics
 
-    // Recents lib dependency
     withQuickstepCompileOnly projects.hiddenApi
     withQuickstepImplementation projects.shared
     withQuickstepImplementation projects.animation
@@ -377,7 +358,6 @@ dependencies {
     withQuickstepCompileOnly projects.common
     withQuickstepCompileOnly projects.utils
 
-    // QuickSwitch Compat
     withQuickstepImplementation projects.compatLib
     withQuickstepImplementation projects.compatLib.compatLibVQ
     withQuickstepImplementation projects.compatLib.compatLibVR
@@ -390,7 +370,6 @@ dependencies {
     withQuickstepImplementation projects.flags
     withQuickstepImplementation projects.dagger
     withQuickstepImplementation projects.concurrent
-//    withQuickstepImplementation projects.compose
     withQuickstepImplementation projects.modules.widgetpicker
     implementation libs.androidx.dynamicanimation
 
@@ -455,10 +434,8 @@ dependencies {
 
     implementation libs.airbnb.lottie
 
-    // Compose drag and drop library
     implementation libs.reorderable
 
-    // Smartspacer
     implementation(libs.smartspacer.sdk) {
         exclude group: "com.github.skydoves", module: "balloon"
     }
@@ -484,11 +461,8 @@ ksp {
     arg("dagger.hilt.disableModulesHaveInstallInCheck", "true")
 }
 
-
 spotless {
     java {
-        // LC-Note: Don't spotless AOSP code in compatlib
-        // target("compatLib/**/src/**/*.java")
         googleJavaFormat().aosp()
         removeUnusedImports()
     }
