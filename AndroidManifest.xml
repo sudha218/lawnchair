@@ -21,19 +21,16 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    
     <uses-sdk android:targetSdkVersion="30" android:minSdkVersion="26"
         tools:overrideLibrary="com.kieronquinn.app.smartspacer.sdk.client"/>
-    <!--
-    Manifest entries specific to Launcher3. This is merged with AndroidManifest-common.xml.
-    Refer comments around specific entries on how to extend individual components.
-    -->
 
     <!-- Permission required to start a WidgetPickerActivity. -->
     <permission android:name="${applicationId}.permission.START_WIDGET_PICKER_ACTIVITY"
         android:protectionLevel="signature|privileged" />
 
     <application
-        android:name="com.patalix.patalix"
+        android:name="com.patalix.patalix.PatalixApplication"
         android:backupAgent="com.android.launcher3.LauncherBackupAgent"
         android:fullBackupOnly="true"
         android:fullBackupContent="@xml/backupscheme"
@@ -47,11 +44,10 @@
         android:supportsRtl="true" >
 
         <!--
-        Main launcher activity. When extending only change the name, and keep all the
-        attributes and intent filters the same
+        Main launcher activity.
         -->
         <activity
-            android:name="app.lawnchair.LawnchairLauncher"
+            android:name="com.patalix.patalix.LawnchairLauncher"
             android:launchMode="singleTask"
             android:clearTaskOnLaunch="true"
             android:stateNotNeeded="true"
@@ -75,7 +71,7 @@
             </intent-filter>
             <meta-data
                 android:name="com.android.launcher3.grid.control"
-                android:value="${packageName}.grid_control" />
+                android:value="${applicationId}.grid_control" />
         </activity>
 
         <activity android:name="com.android.launcher3.widgetpicker.WidgetPickerActivity"
