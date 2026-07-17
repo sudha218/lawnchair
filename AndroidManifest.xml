@@ -33,7 +33,7 @@
         android:protectionLevel="signature|privileged" />
 
     <application
-        android:name="app.lawnchair.LawnchairApp"
+        android:name="com.patalix.patalix"
         android:backupAgent="com.android.launcher3.LauncherBackupAgent"
         android:fullBackupOnly="true"
         android:fullBackupContent="@xml/backupscheme"
