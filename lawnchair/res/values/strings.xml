@@ -155,6 +155,8 @@
     <string name="advanced">Advanced</string>
 
     <!-- Draggable -->
+    <string name="reorderable_move_up">Move up</string>
+    <string name="reorderable_move_down">Move down</string>
     <string name="reorderable_active_items">Active items</string>
     <string name="reorderable_disabled_items">Other items</string>
     <string name="reorderable_disabled_hint">Disabled items will appear here</string>
@@ -360,7 +362,7 @@
     <string name="themed_icon_pack_tint">Tint with accent color</string>
     <string name="system_icons">System icons</string>
     <string name="force_monochrome_label">Force monochrome</string>
-    <string name="force_monochrome_description">Recolor unsupported apps with the current accent color. Requires restart.</string>
+    <string name="force_monochrome_description">Recolor unsupported apps with the current accent color.</string>
 
     <string name="themed_icon_title">Themed icons</string>
     <string name="themed_icons_off_label">Off</string>
@@ -776,6 +778,7 @@
     <string name="open_in_store_drop_target_label">Open in store</string>
 
     <string name="dock_icons">Dock icons</string>
+    <string name="dock_rows">Dock rows</string>
     <string name="state_folded">%1$s (folded)</string>
     <string name="state_unfolded">%1$s (unfolded)</string>
     <string name="folded_label">Folded</string>
